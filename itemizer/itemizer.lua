@@ -207,6 +207,12 @@ windower.register_event('unhandled command', function(command, ...)
 
         local item_name = args:concat(' ')
 
+        -- "Storage Slip <N>" items have a trailing number as part of their name, not a quantity.
+        if count and item_name:lower():startswith('storage slip') then
+            item_name = item_name .. ' ' .. count
+            count = nil
+        end
+
         local item_ids = (S(res.items:name(windower.wc_match-{item_name})) + S(res.items:name_log(windower.wc_match-{item_name}))):map(table.get-{'id'})
         if item_ids:length() == 0 then
             error('Unknown item: %s':format(item_name))
