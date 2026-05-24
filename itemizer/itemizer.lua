@@ -159,6 +159,7 @@ windower.register_event('unhandled command', function(command, ...)
 
     if handled_commands:contains(command) then
         local count
+        local count_explicit = false
         if command:endswith('s') then
             command = command:sub(1, -2)
         else
@@ -167,6 +168,7 @@ windower.register_event('unhandled command', function(command, ...)
                 args:remove()
             elseif not last:find('[^0-9]') then
                 count = tonumber(last)
+                count_explicit = true
                 args:remove()
             else
                 count = 1
@@ -208,7 +210,7 @@ windower.register_event('unhandled command', function(command, ...)
         local item_name = args:concat(' ')
 
         -- "Storage Slip <N>" items have a trailing number as part of their name, not a quantity.
-        if count and item_name:lower():startswith('storage slip') then
+        if count_explicit and item_name:lower():startswith('storage slip') then
             item_name = item_name .. ' ' .. count
             count = nil
         end
